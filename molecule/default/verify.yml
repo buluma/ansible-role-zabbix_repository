@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: install a zabbix package
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - zabbix-get
+        - zabbix-server-mysql
+        - zabbix-apache-conf
+        - zabbix-agent
