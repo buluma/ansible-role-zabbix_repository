@@ -35,8 +35,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - image: "centos"
-            tag: "latest"
+          - image: "centos-systemd"
+            tag: "7"
           - image: "debian-systemd"
             tag: "latest"
           - image: "opensuse"
