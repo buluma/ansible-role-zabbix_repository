@@ -2,7 +2,8 @@
 # tasks file for zabbix_repository
 
 - name: Import assert.yml
-  ansible.builtin.import_tasks: assert.yml
+  ansible.builtin.import_tasks:
+    file: assert.yml
   run_once: yes
   delegate_to: localhost
 
@@ -11,22 +12,42 @@
     - ansible_distribution in [ "CentOS", "RedHat", "Rocky" ] or
       ansible_os_family in [ "Debian", "Suse" ]
   block:
-    - name: Install rpm key
-      ansible.builtin.rpm_key:
-        key: "https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-A14FE591"
-        state: present
+    - name: Manage crypto policy
       when:
-        - ansible_pkg_mgr in [ "dnf", "yum", "zypper" ]
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version == "9"
+      block:
+        - name: Install crypto-policies-scripts
+          ansible.builtin.package:
+            name: crypto-policies-scripts
+          notify:
+            - Uninstall crypto-policies-scripts
 
-    - name: Install (dnf/yum)
+        - name: Get current crypto policy
+          ansible.builtin.command:
+            cmd: update-crypto-policies --show
+          changed_when: no
+          register: elastic_repo_current_crypto_policy
+
+        - name: Switch to legacy crypto policy
+          ansible.builtin.command:
+            cmd: update-crypto-policies --set LEGACY
+          changed_when: yes
+          when:
+            - elastic_repo_current_crypto_policy.stdout != "LEGACY"
+          notify:
+            - Switch back to default crypto policy
+
+    - name: Install (dnf/yum) repository
       ansible.builtin.package:
         name: "{{ zabbix_repository_package }}"
+        disable_gpg_check: yes
         state: present
       register: zabbix_repository_install_dnf_yum
       when:
         - ansible_pkg_mgr in [ "dnf", "yum" ]
 
-    - name: Install (apt)
+    - name: Install (apt) repository
       ansible.builtin.apt:
         deb: "{{ zabbix_repository_package }}"
       register: zabbix_repository_install_apt
@@ -35,7 +56,7 @@
       notify:
         - Update cache
 
-    - name: Install (zypper}
+    - name: Install (zypper) repository
       community.general.zypper:
         name: "{{ zabbix_repository_package }}"
         state: present
@@ -44,30 +65,36 @@
       when:
         - ansible_pkg_mgr == "zypper"
 
-    - name: Fail when yum/dnf, apt and zypper are skipped
-      ansible.builtin.fail:
-        msg: "This system does not support yum, dnf or apt."
+    - name: Trust repository GPG key (rpm)
+      ansible.builtin.rpm_key:
+        key: "https://repo.zabbix.com/zabbix-official-repo.key"
       when:
-        - zabbix_repository_install_dnf_yum is skipped
-        - zabbix_repository_install_apt is skipped
-        - zabbix_repository_install_zypper is skipped
+        - ansible_pkg_mgr in [ "dnf", "yum", "zypper" ]
 
-    - name: Create /etc/zabbix
-      ansible.builtin.file:
-        path: /etc/zabbix
-        state: directory
-        mode: "0755"
+- name: Fail when yum/dnf, apt and zypper are skipped
+  ansible.builtin.fail:
+    msg: "This system does not support yum, dnf or apt."
+  when:
+    - zabbix_repository_install_dnf_yum is skipped
+    - zabbix_repository_install_apt is skipped
+    - zabbix_repository_install_zypper is skipped
 
-    - name: Enable zabbix-frontend
-      community.general.ini_file:
-        path: /etc/yum.repos.d/zabbix.repo
-        section: zabbix-frontend
-        option: enabled
-        value: "1"
-        mode: "0644"
-      when:
-        - ansible_os_family in [ "RedHat", "Rocky" ]
-        - ansible_distribution_major_version == "7"
+- name: Create /etc/zabbix
+  ansible.builtin.file:
+    path: /etc/zabbix
+    state: directory
+    mode: "0755"
+
+- name: Enable zabbix-frontend
+  community.general.ini_file:
+    path: /etc/yum.repos.d/zabbix.repo
+    section: zabbix-frontend
+    option: enabled
+    value: "1"
+    mode: "0644"
+  when:
+    - ansible_os_family in [ "RedHat", "Rocky" ]
+    - ansible_distribution_major_version == "7"
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
