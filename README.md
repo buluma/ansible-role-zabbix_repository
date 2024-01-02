@@ -1,10 +1,10 @@
-# [Ansible role zabbix_repository](#zabbix_repository)
+# Ansible role [zabbix_repository](https://galaxy.ansible.com/ui/standalone/roles/buluma/zabbix_repository/documentation)
 
 Install and configure zabbix_repository on your system.
 
-|GitHub|GitLab|Downloads|Version|Issues|Pull Requests|
-|------|------|-------|-------|------|-------------|
-|[![github](https://github.com/buluma/ansible-role-zabbix_repository/actions/workflows/molecule.yml/badge.svg)](https://github.com/buluma/ansible-role-zabbix_repository/actions/workflows/molecule.yml)|[![gitlab](https://gitlab.com/shadowwalker/ansible-role-zabbix_repository/badges/master/pipeline.svg)](https://gitlab.com/shadowwalker/ansible-role-zabbix_repository)|[![downloads](https://img.shields.io/ansible/role/d/4888)](https://galaxy.ansible.com/buluma/zabbix_repository)|[![Version](https://img.shields.io/github/release/buluma/ansible-role-zabbix_repository.svg)](https://github.com/buluma/ansible-role-zabbix_repository/releases/)|[![Issues](https://img.shields.io/github/issues/buluma/ansible-role-zabbix_repository.svg)](https://github.com/buluma/ansible-role-zabbix_repository/issues/)|[![PullRequests](https://img.shields.io/github/issues-pr-closed-raw/buluma/ansible-role-zabbix_repository.svg)](https://github.com/buluma/ansible-role-zabbix_repository/pulls/)|
+|GitHub|Version|Issues|Pull Requests|Downloads|
+|------|-------|------|-------------|---------|
+|[![github](https://github.com/buluma/ansible-role-zabbix_repository/actions/workflows/molecule.yml/badge.svg)](https://github.com/buluma/ansible-role-zabbix_repository/actions/workflows/molecule.yml)|[![Version](https://img.shields.io/github/release/buluma/ansible-role-zabbix_repository.svg)](https://github.com/buluma/ansible-role-zabbix_repository/releases/)|[![Issues](https://img.shields.io/github/issues/buluma/ansible-role-zabbix_repository.svg)](https://github.com/buluma/ansible-role-zabbix_repository/issues/)|[![PullRequests](https://img.shields.io/github/issues-pr-closed-raw/buluma/ansible-role-zabbix_repository.svg)](https://github.com/buluma/ansible-role-zabbix_repository/pulls/)|[![Ansible Role](https://img.shields.io/ansible/role/d/buluma/zabbix_repository)](https://galaxy.ansible.com/ui/standalone/roles/buluma/zabbix_repository/documentation)|
 
 ## [Example Playbook](#example-playbook)
 
@@ -46,10 +46,18 @@ The default values for the variables are set in [`defaults/main.yml`](https://gi
 # defaults file for zabbix_repository
 
 # The`"zabbix_version_major` are two numerical values, sparated by a period.
-zabbix_repository_version_major: "5.4"
+zabbix_repository_version_major: "6.4"
 
 # The `zabbix_version_minor` is a single numerical value.
 zabbix_repository_version_minor: 1
+
+# An extra package is required for RHEL9 (`crypto-policies-scripts`).
+# This variable determines if it should be removed or not.
+zabbix_repository_cleanup_requirements: yes
+
+# The crypto policy must be modified on RHEL9. This variable determines if
+# the policy should be switched back to the default.
+zabbix_repository_revert_crypto_policy: yes
 ```
 
 ## [Requirements](#requirements)
@@ -60,10 +68,10 @@ zabbix_repository_version_minor: 1
 
 The following roles are used to prepare a system. You can prepare your system in another way.
 
-| Requirement | GitHub | GitLab |
+| Requirement | GitHub | Version |
 |-------------|--------|--------|
-|[buluma.bootstrap](https://galaxy.ansible.com/buluma/bootstrap)|[![Build Status GitHub](https://github.com/buluma/ansible-role-bootstrap/workflows/Ansible%20Molecule/badge.svg)](https://github.com/buluma/ansible-role-bootstrap/actions)|[![Build Status GitLab](https://gitlab.com/shadowwalker/ansible-role-bootstrap/badges/master/pipeline.svg)](https://gitlab.com/shadowwalker/ansible-role-bootstrap)|
-|[buluma.ca_certificates](https://galaxy.ansible.com/buluma/ca_certificates)|[![Build Status GitHub](https://github.com/buluma/ansible-role-ca_certificates/workflows/Ansible%20Molecule/badge.svg)](https://github.com/buluma/ansible-role-ca_certificates/actions)|[![Build Status GitLab](https://gitlab.com/shadowwalker/ansible-role-ca_certificates/badges/master/pipeline.svg)](https://gitlab.com/shadowwalker/ansible-role-ca_certificates)|
+|[buluma.bootstrap](https://galaxy.ansible.com/buluma/bootstrap)|[![Ansible Molecule](https://github.com/buluma/ansible-role-bootstrap/actions/workflows/molecule.yml/badge.svg)](https://github.com/buluma/ansible-role-bootstrap/actions/workflows/molecule.yml)|[![Version](https://img.shields.io/github/release/buluma/ansible-role-bootstrap.svg)](https://github.com/shadowwalker/ansible-role-bootstrap)|
+|[buluma.ca_certificates](https://galaxy.ansible.com/buluma/ca_certificates)|[![Ansible Molecule](https://github.com/buluma/ansible-role-ca_certificates/actions/workflows/molecule.yml/badge.svg)](https://github.com/buluma/ansible-role-ca_certificates/actions/workflows/molecule.yml)|[![Version](https://img.shields.io/github/release/buluma/ansible-role-ca_certificates.svg)](https://github.com/shadowwalker/ansible-role-ca_certificates)|
 
 ## [Context](#context)
 
@@ -97,14 +105,9 @@ If you find issues, please register them in [GitHub](https://github.com/buluma/a
 
 ## [License](#license)
 
-[Apache-2.0](https://github.com/buluma/ansible-role-zabbix_repository/blob/master/LICENSE).
+[Apache-2.0](https://github.com/buluma/ansible-role-zabbix_repository/blob/master/LICENSE)
 
 ## [Author Information](#author-information)
 
-[buluma](https://buluma.github.io/)
+[Shadow Walker](https://buluma.github.io/)
 
-Please consider [sponsoring me](https://github.com/sponsors/buluma).
-
-### [Special Thanks](#special-thanks)
-
-Template inspired by [Robert de Bock](https://github.com/robertdebock)
