@@ -6,6 +6,7 @@
 
 **Closed issues:**
 
+- Update buluma/todo-to-issue-action@v1.0.1 @buluma [\#14](https://github.com/buluma/ansible-role-zabbix_repository/issues/14)
 - Update buluma/todo-to-issue-action@v1.0.1 @buluma [\#11](https://github.com/buluma/ansible-role-zabbix_repository/issues/11)
 - Update action [\#10](https://github.com/buluma/ansible-role-zabbix_repository/issues/10)
 
