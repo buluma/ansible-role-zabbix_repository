@@ -43,14 +43,18 @@ jobs:
       fail-fast: false
       matrix:
         config:
+          - image: "centos"
+            tag: "8"
+          - image: "centos"
+            tag: "latest"
           - image: "debian-systemd"
             tag: "bullseye"
           - image: "docker-opensuse-systemd"
             tag: "latest"
           - image: "docker-ubuntu-systemd"
-            tag: "focal"
-          - image: "docker-ubuntu-systemd"
             tag: "bionic"
+          - image: "docker-ubuntu-systemd"
+            tag: "focal"
     steps:
       - name: Checkout Role
         uses: actions/checkout@v4
