@@ -10,6 +10,10 @@
 - Update buluma/todo-to-issue-action@v1.0.1 @buluma [\#11](https://github.com/buluma/ansible-role-zabbix_repository/issues/11)
 - Update action [\#10](https://github.com/buluma/ansible-role-zabbix_repository/issues/10)
 
+**Merged pull requests:**
+
+- Bump actions/checkout from 3 to 4 [\#15](https://github.com/buluma/ansible-role-zabbix_repository/pull/15) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [1.0.7](https://github.com/buluma/ansible-role-zabbix_repository/tree/1.0.7) (2022-10-01)
 
 [Full Changelog](https://github.com/buluma/ansible-role-zabbix_repository/compare/1.0.6...1.0.7)
