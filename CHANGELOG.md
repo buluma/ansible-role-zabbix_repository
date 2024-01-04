@@ -12,6 +12,7 @@
 
 **Merged pull requests:**
 
+- Bump buluma/gh-action-auto-merge-dependabot-updates from 1.0.5 to 1.0.8 [\#17](https://github.com/buluma/ansible-role-zabbix_repository/pull/17) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump actions/checkout from 3 to 4 [\#15](https://github.com/buluma/ansible-role-zabbix_repository/pull/15) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [1.0.7](https://github.com/buluma/ansible-role-zabbix_repository/tree/1.0.7) (2022-10-01)
