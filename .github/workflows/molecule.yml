@@ -43,9 +43,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - image: "centos"
+          - image: "enterpriselinux"
             tag: "8"
-          - image: "centos"
+          - image: "enterpriselinux"
             tag: "latest"
           - image: "debian-systemd"
             tag: "bullseye"
