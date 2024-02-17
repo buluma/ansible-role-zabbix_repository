@@ -22,7 +22,7 @@ on:
   pull_request_target:
   schedule:
     # - cron: '51 22 26 * *'
-    - cron: '51 22 * * 3'
+    - cron: '51 22 * * *'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -47,7 +47,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - image: "enterpriselinux"
+          - image: "centos"
             tag: "8"
           - image: "debian-systemd"
             tag: "bullseye"
@@ -61,7 +61,7 @@ jobs:
         with:
           path: "${{ github.repository }}"
       - name: Running Molecule Test
-        uses: buluma/molecule-action@v6.0.3
+        uses: buluma/molecule-action@v24.2.0
         with:
           image: ${{ matrix.config.image }}
           tag: ${{ matrix.config.tag }}
