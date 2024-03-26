@@ -14,8 +14,8 @@ This example is taken from [`molecule/default/converge.yml`](https://github.com/
 ---
 - name: Converge
   hosts: all
-  become: yes
-  gather_facts: yes
+  become: true
+  gather_facts: true
 
   roles:
     - role: buluma.zabbix_repository
@@ -27,8 +27,8 @@ The machine needs to be prepared. In CI this is done using [`molecule/default/pr
 ---
 - name: Prepare
   hosts: all
-  gather_facts: no
-  become: yes
+  gather_facts: false
+  become: true
 
   roles:
     - role: buluma.bootstrap
@@ -53,11 +53,11 @@ zabbix_repository_version_minor: 1
 
 # An extra package is required for RHEL9 (`crypto-policies-scripts`).
 # This variable determines if it should be removed or not.
-zabbix_repository_cleanup_requirements: yes
+zabbix_repository_cleanup_requirements: true
 
 # The crypto policy must be modified on RHEL9. This variable determines if
 # the policy should be switched back to the default.
-zabbix_repository_revert_crypto_policy: yes
+zabbix_repository_revert_crypto_policy: true
 ```
 
 ## [Requirements](#requirements)
