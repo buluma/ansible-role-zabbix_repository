@@ -46,7 +46,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - image: "centos"
+          - image: "enterpriselinux"
             tag: "8"
           - image: "docker-molecule-images"
             tag: "bullseye"
