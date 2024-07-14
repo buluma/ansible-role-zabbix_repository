@@ -55,8 +55,6 @@ jobs:
           - image: "docker-molecule-images"
             tag: "focal"
           - image: "docker-molecule-images"
-            tag: "bionic"
-          - image: "docker-molecule-images"
             tag: "noble"
           - image: "docker-molecule-images"
             tag: "jammy"
