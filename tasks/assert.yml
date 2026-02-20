@@ -1,5 +1,4 @@
 ---
-
 - name: assert | Test zabbix_repository_version_major
   ansible.builtin.assert:
     that:
