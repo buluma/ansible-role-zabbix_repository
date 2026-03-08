@@ -5,12 +5,12 @@
   gather_facts: false
 
   tasks:
-  - name: Install a zabbix package
-    ansible.builtin.package:
-      name: "{{ item }}"
-      state: present
-    loop:
-    - zabbix-get
-    - zabbix-server-mysql
-    - zabbix-apache-conf
-    - zabbix-agent
+    - name: Install a zabbix package
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - zabbix-get
+        - zabbix-server-mysql
+        - zabbix-apache-conf
+        - zabbix-agent
