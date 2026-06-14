@@ -18,6 +18,6 @@ _zabbix_repository_package:
     }}.sles{{ ansible_facts['distribution_major_version'] }}.noarch.rpm"
   Ubuntu:
     "{{ zabbix_url_start }}/{{ ansible_facts['distribution'] | lower }}/pool/main/z/zabbix-release/zabbix-release_{{ zabbix_repository_version_major }}-{{ zabbix_repository_version_minor
-    }}+{{ ansible_facts['distribution'] | lower }}{{ ansible_distribution_version }}_all.deb"
+    }}+{{ ansible_facts['distribution'] | lower }}{{ ansible_facts['distribution_version'] }}_all.deb"
 
 zabbix_repository_package: "{{ _zabbix_repository_package[ansible_facts['distribution']] | default(_zabbix_repository_package[ansible_facts['os_family']]) }}"
