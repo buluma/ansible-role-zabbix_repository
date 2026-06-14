@@ -9,12 +9,12 @@
 
 - name: Install zabbix repository
   when:
-    - ansible_distribution in [ "CentOS", "RedHat", "Rocky" ] or ansible_os_family in [ "Debian", "Suse" ]
+    - ansible_facts.distribution in [ "CentOS", "RedHat", "Rocky" ] or ansible_facts.os_family in [ "Debian", "Suse" ]
   block:
     - name: Manage crypto policy
       when:
-        - ansible_os_family == "RedHat"
-        - ansible_distribution_major_version == "9"
+        - ansible_facts.os_family == "RedHat"
+        - ansible_facts.distribution_major_version == "9"
       block:
         - name: Install crypto-policies-scripts
           ansible.builtin.package:
@@ -44,14 +44,14 @@
         state: present
       register: zabbix_repository_install_dnf_yum
       when:
-        - ansible_pkg_mgr in [ "dnf", "yum" ]
+        - ansible_facts.pkg_mgr in [ "dnf", "yum" ]
 
     - name: Install (apt) repository
       ansible.builtin.apt:
         deb: "{{ zabbix_repository_package }}"
       register: zabbix_repository_install_apt
       when:
-        - ansible_pkg_mgr == "apt"
+        - ansible_facts.pkg_mgr == "apt"
       notify:
         - Update cache
 
@@ -62,13 +62,13 @@
         disable_gpg_check: true
       register: zabbix_repository_install_zypper
       when:
-        - ansible_pkg_mgr == "zypper"
+        - ansible_facts.pkg_mgr == "zypper"
 
     - name: Trust repository GPG key (rpm)
       ansible.builtin.rpm_key:
         key: "https://repo.zabbix.com/zabbix-official-repo.key"
       when:
-        - ansible_pkg_mgr in [ "dnf", "yum", "zypper" ]
+        - ansible_facts.pkg_mgr in [ "dnf", "yum", "zypper" ]
 
 - name: Fail when yum/dnf, apt and zypper are skipped
   ansible.builtin.fail:
@@ -92,8 +92,8 @@
     value: "1"
     mode: "0644"
   when:
-    - ansible_os_family in [ "RedHat", "Rocky" ]
-    - ansible_distribution_major_version == "7"
+    - ansible_facts.os_family in [ "RedHat", "Rocky" ]
+    - ansible_facts.distribution_major_version == "7"
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
