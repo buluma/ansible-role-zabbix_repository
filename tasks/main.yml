@@ -11,10 +11,16 @@
   when:
     - ansible_facts['distribution'] in [ "CentOS", "RedHat", "Rocky" ] or ansible_facts['os_family'] in [ "Debian", "Suse" ]
   block:
+    - name: Check if zabbix yum repository is already configured
+      ansible.builtin.stat:
+        path: /etc/yum.repos.d/zabbix.repo
+      register: _zabbix_yum_repo
+
     - name: Manage crypto policy
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version'] == "9"
+        - not _zabbix_yum_repo.stat.exists
       block:
         - name: Install crypto-policies-scripts
           ansible.builtin.package:
