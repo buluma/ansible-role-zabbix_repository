@@ -27,8 +27,15 @@ The machine needs to be prepared. In CI this is done using [`molecule/default/pr
 ---
 - name: Prepare
   hosts: all
-  gather_facts: false
   become: true
+  gather_facts: false
+
+  pre_tasks:
+    - name: Install sudo if missing
+      ansible.builtin.raw: "{{ ansible_pkg_mgr | default('dnf') }} install -y sudo}"
+      become: false
+      changed_when: false
+      failed_when: false
 
   roles:
     - role: buluma.bootstrap
@@ -46,10 +53,10 @@ The default values for the variables are set in [`defaults/main.yml`](https://gi
 # defaults file for zabbix_repository
 
 # The`"zabbix_version_major` are two numerical values, sparated by a period.
-zabbix_repository_version_major: "6.4"
+zabbix_repository_version_major: "7.0"
 
 # The `zabbix_version_minor` is a single numerical value.
-zabbix_repository_version_minor: 1
+zabbix_repository_version_minor: 3
 
 # An extra package is required for RHEL9 (`crypto-policies-scripts`).
 # This variable determines if it should be removed or not.
@@ -83,13 +90,14 @@ Here is an overview of related roles:
 
 ## [Compatibility](#compatibility)
 
-This role has been tested on these [container images](https://hub.docker.com/u/robertdebock):
+This role has been tested on these [container images](https://hub.docker.com/u/buluma):
 
 |container|tags|
 |---------|----|
-|[EL](https://hub.docker.com/r/robertdebock/enterpriselinux)|all|
-|[Debian](https://hub.docker.com/r/robertdebock/debian)|all|
-|[Ubuntu](https://hub.docker.com/r/robertdebock/ubuntu)|all|
+|[EL](https://hub.docker.com/r/buluma/docker-molecule-images)|all|
+|[Debian](https://hub.docker.com/r/buluma/docker-molecule-images)|all|
+|[Fedora](https://hub.docker.com/r/buluma/docker-molecule-images)|all|
+|[Ubuntu](https://hub.docker.com/r/buluma/docker-molecule-images)|all|
 
 The minimum version of Ansible required is 2.12, tests have been done on:
 
@@ -107,6 +115,3 @@ If you find issues, please register them on [GitHub](https://github.com/buluma/a
 
 [buluma](https://buluma.github.io/)
 
-### Get Help
-- Report issues: https://github.com/buluma/ansible-role-zabbix_repository/issues/new
-- See docs: https://docs.ansible.com/collection/gallery/ansible-role-zabbix_repository
