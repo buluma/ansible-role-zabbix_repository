@@ -1,5 +1,9 @@
 # Changelog
 
+## [26.7.0](https://github.com/buluma/ansible-role-zabbix_repository/tree/26.7.0) (2026-07-21)
+
+[Full Changelog](https://github.com/buluma/ansible-role-zabbix_repository/compare/26.6.3...26.7.0)
+
 ## [26.6.3](https://github.com/buluma/ansible-role-zabbix_repository/tree/26.6.3) (2026-06-15)
 
 [Full Changelog](https://github.com/buluma/ansible-role-zabbix_repository/compare/26.6.2...26.6.3)
