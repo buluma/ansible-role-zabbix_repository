@@ -2,7 +2,7 @@
 - name: Verify
   hosts: all
   become: true
-  gather_facts: false
+  gather_facts: true
 
   tasks:
     - name: Install a zabbix package
@@ -12,3 +12,5 @@
       loop:
         - zabbix-get
         - zabbix-agent
+      when:
+        - ansible_facts['distribution'] in [ "CentOS", "RedHat", "Rocky", "AlmaLinux" ] or ansible_facts['os_family'] in [ "Debian", "Suse" ]
