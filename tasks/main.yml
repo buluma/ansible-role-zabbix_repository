@@ -9,7 +9,7 @@
 
 - name: Install zabbix repository
   when:
-    - ansible_facts['distribution'] in [ "CentOS", "RedHat", "Rocky" ] or ansible_facts['os_family'] in [ "Debian", "Suse" ]
+    - ansible_facts['distribution'] in [ "CentOS", "RedHat", "Rocky", "AlmaLinux" ] or ansible_facts['os_family'] in [ "Debian", "Suse" ]
   block:
     - name: Check if zabbix yum repository is already configured
       ansible.builtin.stat:
