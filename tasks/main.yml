@@ -80,6 +80,7 @@
   ansible.builtin.fail:
     msg: "This system does not support yum, dnf or apt."
   when:
+    - ansible_facts['distribution'] in [ "CentOS", "RedHat", "Rocky", "AlmaLinux" ] or ansible_facts['os_family'] in [ "Debian", "Suse" ]
     - zabbix_repository_install_dnf_yum is skipped
     - zabbix_repository_install_apt is skipped
     - zabbix_repository_install_zypper is skipped
