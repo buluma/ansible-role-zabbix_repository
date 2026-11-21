@@ -1,0 +1,73 @@
+---
+# Verifies and imports the Zabbix repository key. zabbix-official-repo.key is
+# a bundle of several keys and rpm_key imports all of them, so the key is
+# fetched into a private temporary directory first and only imported when it
+# holds at least one key and every primary key in it has a fingerprint listed
+# in _zabbix_repository_rpm_key_fingerprints. The fingerprint option of rpm_key
+# is not used: depending on the version of Ansible it only compares the first
+# key of the file, or only checks that the given fingerprint is present, and
+# neither stops an extra key from being imported.
+- name: rpm-key | Create temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: zabbix-key-
+  register: _zabbix_repository_rpm_key_dir
+  changed_when: false
+
+- name: rpm-key | Verify and import key
+  block:
+    - name: rpm-key | Download key
+      ansible.builtin.get_url:
+        url: "{{ _zabbix_repository_rpm_key_url }}"
+        dest: "{{ _zabbix_repository_rpm_key_dir.path }}/key"
+        mode: "0600"
+      changed_when: false
+      register: _zabbix_repository_rpm_key_download
+      until: _zabbix_repository_rpm_key_download is succeeded
+
+    - name: rpm-key | Read key fingerprints
+      ansible.builtin.command:
+        argv:
+          - gpg
+          - --show-keys
+          - --with-colons
+          - --with-fingerprint
+          - "{{ _zabbix_repository_rpm_key_dir.path }}/key"
+      environment:
+        GNUPGHOME: "{{ _zabbix_repository_rpm_key_dir.path }}"
+      changed_when: false
+      register: _zabbix_repository_rpm_key_info
+
+    # In the colon listing the fpr line right after a pub line is the
+    # fingerprint of that primary key, the other fpr lines belong to subkeys.
+    - name: rpm-key | Verify key fingerprints
+      ansible.builtin.assert:
+        that:
+          - _zabbix_repository_rpm_key_found | length > 0
+          - _zabbix_repository_rpm_key_found | difference(_zabbix_repository_rpm_key_fingerprints | map('upper') | list) | length == 0
+        fail_msg: >-
+          The key downloaded from {{ _zabbix_repository_rpm_key_url }} holds
+          primary keys with the fingerprints {{ _zabbix_repository_rpm_key_found | join(', ') }},
+          only {{ _zabbix_repository_rpm_key_fingerprints | join(', ') }} are
+          trusted, refusing to import it.
+        quiet: true
+      vars:
+        _zabbix_repository_rpm_key_found: >-
+          {{ _zabbix_repository_rpm_key_info.stdout_lines
+          | zip(_zabbix_repository_rpm_key_info.stdout_lines[1:])
+          | selectattr('0', 'match', '^pub:')
+          | map(attribute='1')
+          | map('regex_replace', '^fpr:+([0-9A-Fa-f]+):.*$', '\1')
+          | map('upper')
+          | list }}
+
+    - name: rpm-key | Import key
+      ansible.builtin.rpm_key:
+        key: "{{ _zabbix_repository_rpm_key_dir.path }}/key"
+        state: present
+  always:
+    - name: rpm-key | Remove temporary directory
+      ansible.builtin.file:
+        path: "{{ _zabbix_repository_rpm_key_dir.path }}"
+        state: absent
+      changed_when: false
